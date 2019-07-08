@@ -16,3 +16,4 @@ The code is ordered by the way I wrote these drills (and by the way I learned
 Rust).  You may like to follow the same order.
 
 1. search
+2. macros
