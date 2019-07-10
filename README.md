@@ -18,3 +18,4 @@ Rust).  You may like to follow the same order.
 1. search
 2. macros
 3. combinators
+4. sort
