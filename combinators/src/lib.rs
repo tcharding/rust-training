@@ -1,7 +1,9 @@
-/// Returns the file extension from fname.
-pub fn extension(fname: &str) -> Option<&str> {
-    let index = fname.rfind(".")?;
-    Some(&fname[index + 1..])
+/// Returns the suffix from file name.
+pub fn suffix(file_name: &str) -> Option<&str> {
+    match file_name.rfind(".") {
+        Some(index) => Some(&file_name[index + 1..]),
+        None => None,
+    }
 }
 
 /// Returns the base name from path.
@@ -11,17 +13,8 @@ pub fn base_name(path: &str) -> Option<&str> {
 }
 
 /// Demonstrates combinator usage.
-pub fn file_path_extension(path: &str) -> Option<&str> {
-    base_name(path).and_then(extension)
-}
-
-/// Combinator that calls f if option contains a value.
-pub fn and_then<F, T, A>(option: Option<T>, f: F) -> Option<A>
-where
-    F: FnOnce(T) -> Option<A>,
-{
-    let value = option?;
-    f(value)
+pub fn path_suffix(path: &str) -> Option<&str> {
+    base_name(path).and_then(suffix)
 }
 
 #[cfg(test)]
@@ -29,17 +22,17 @@ mod tests {
     use super::*;
 
     #[test]
-    fn gets_correct_extension() {
+    fn gets_correct_suffix() {
         let fname = "foo.txt";
         let want = "txt";
-        let got = extension(fname).expect("failed to get existing extension");
+        let got = suffix(fname).expect("failed to get existing suffix");
         assert_eq!(want, got);
     }
 
     #[test]
     #[should_panic]
-    fn gets_none_when_no_file_extension() {
-        extension("foo").expect("false positive");
+    fn gets_none_when_no_file_suffix() {
+        suffix("foo").expect("false positive");
     }
 
     #[test]
@@ -51,10 +44,10 @@ mod tests {
     }
 
     #[test]
-    fn gets_file_path_extension() {
+    fn gets_path_suffix() {
         let path = "/path/to/foo.txt";
         let want = "txt";
-        let got = file_path_extension(path).expect("failde to get extension");
+        let got = path_suffix(path).expect("failed to get suffix");
         assert_eq!(want, got);
     }
 }
