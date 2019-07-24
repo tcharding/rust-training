@@ -20,8 +20,8 @@ pub fn binary_search<T: Ord>(data: &[T], target: &T) -> Option<usize> {
 
     while low < high {
         match target.cmp(&data[mid]) {
-            Less => high = mid,
-            Greater => low = mid,
+            Less => high = mid - 1,
+            Greater => low = mid + 1,
             Equal => return Some(mid),
         }
         mid = (high + low) / 2;
@@ -54,11 +54,16 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
-    fn binary_search_fails_correctly() {
-        let data = vec![0, 1, 2];
-        let target = 999;
+    fn binary_search_returns_none() {
+        let data = vec![1, 2, 3];
+        let target = 10;
+        assert_eq!(binary_search(&data, &target), None);
+    }
 
-        linear_search(&data, &target).unwrap();
+    #[test]
+    fn binary_search_returns_none_for_internal_missing_value() {
+        let data = vec![0, 1, 2, 4, 5];
+        let target = 3;
+        assert_eq!(binary_search(&data, &target), None);
     }
 }
