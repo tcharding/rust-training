@@ -38,16 +38,17 @@ mod tests {
     use super::*;
 
     #[test]
-    fn quick_sort_works() {
-        let mut data = [7, 5, 3, 1, 9, 0, 4, 2, 6, 8];
-        let want = vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    fn sorts_single_element_array() {
+        let mut v = [6];
+        quick_sort(&mut v, &|x, y| x < y);
+    }
 
-        quick_sort(&mut data, &|x, y| x < y);
-
-        for (i, d) in data.iter().enumerate() {
-            if d != &want[i] {
-                panic!("Failed at index: {} with value: {}", i, d);
-            }
+    #[test]
+    fn sorts_multi_element_array() {
+        let mut v = [6, 4, 5];
+        quick_sort(&mut v, &|x, y| x < y);
+        for (i, d) in v.iter().enumerate() {
+            assert_eq!(i + 4, *d);
         }
     }
 }
