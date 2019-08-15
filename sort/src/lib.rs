@@ -44,11 +44,11 @@ mod tests {
     }
 
     #[test]
-    fn sorts_multi_element_array() {
-        let mut v = [6, 4, 5];
+    fn sorts_five_element_array() {
+        let mut v = [0, 3, 4, 2, 1];
         quick_sort(&mut v, &|x, y| x < y);
-        for (i, d) in v.iter().enumerate() {
-            assert_eq!(i + 4, *d);
+        for i in 0..v.len() {
+            assert_eq!(v[i], i);
         }
     }
 }
