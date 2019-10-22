@@ -12,6 +12,15 @@ pub fn linear_search<T: PartialEq>(data: &[T], target: &T) -> Option<usize> {
     None
 }
 
+pub fn iter_search<T: PartialEq>(data: impl Iterator<Item = T>, target: T) -> Option<usize> {
+    for (i, d) in data.enumerate() {
+        if d == target {
+            return Some(i);
+        }
+    }
+    None
+}
+
 /// Searches data for target.  Data must be sorted in ascending order.
 pub fn binary_search<T: Ord>(data: &[T], target: &T) -> Option<usize> {
     let mut low = 0;
@@ -34,17 +43,61 @@ mod tests {
     use super::*;
 
     #[test]
-    fn linear_search_works() {
-        let data = vec![2, 4, 6, 0, 1, 3, 9, 5];
-        let target = 1;
-        let want_index = 4;
+    fn linear_search_returns_none_for_empty_list() {
+        let v = vec![];
 
-        let got_index = linear_search(&data, &target).expect("false negative");
-        assert_eq!(want_index, got_index);
+        let index = linear_search(&v, &1);
+        assert!(index.is_none());
     }
 
     #[test]
-    fn binary_search_works() {
+    fn linear_search_returns_none_for_non_present_value() {
+        let v = vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        let value = 99;
+
+        let found = linear_search(&v, &value);
+        assert!(found.is_none());
+    }
+
+    #[test]
+    fn linear_search_finds_present_value() {
+        let v = vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        let index = 3;
+        let value = 3;
+
+        let found = linear_search(&v, &value).expect("false negative");
+        assert_eq!(found, index);
+    }
+
+    #[test]
+    fn iter_search_returns_none_for_empty_list() {
+        let v = vec![];
+
+        let index = iter_search(v.iter(), &1);
+        assert!(index.is_none());
+    }
+
+    #[test]
+    fn iter_search_returns_none_for_non_present_value() {
+        let v = vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        let value = 99;
+
+        let found = iter_search(v.iter(), &value);
+        assert!(found.is_none());
+    }
+
+    #[test]
+    fn iter_search_finds_present_value() {
+        let v = vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+        let index = 3;
+        let value = 3;
+
+        let found = iter_search(v.iter(), &value).expect("false negative");
+        assert_eq!(found, index);
+    }
+
+    #[test]
+    fn binary_search_finds_preset_value() {
         let data = vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
         let target = 7;
         let want_index = 7;
@@ -54,7 +107,7 @@ mod tests {
     }
 
     #[test]
-    fn binary_search_returns_none() {
+    fn binary_search_returns_none_for_external_missing_value() {
         let data = vec![1, 2, 3];
         let target = 10;
         assert_eq!(binary_search(&data, &target), None);
