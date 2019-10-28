@@ -2,6 +2,8 @@ use std::fs::File;
 use std::io::Read;
 use std::path::Path;
 
+// ref: https://blog.burntsushi.net/rust-error-handling/
+
 fn file_double<P: AsRef<Path>>(file_path: P) -> Result<i32, String> {
     File::open(file_path)
         .map_err(|err| err.to_string())
